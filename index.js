@@ -21,7 +21,7 @@ app.use(cookieParser())
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://care39:IcHwRwGFh4NAb6rN@cluster0.whq23.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = `mongodb+srv://task62:Pj0rjghlaNZHybzV@cluster0.whq23.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -33,14 +33,43 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        // Connect the client to the server	(optional starting in v4.7)
+
+        const db = client.db('taskTrek')
+        const usersCollection = db.collection('users')
+        const tasksCollection = db.collection('tasks')
+
+        app.post('/users/:email', async (req, res) => {
+            const email = req.params.email
+            console.log(email);
+            const query = { email }
+            const user = req.body
+            console.log(query, user)
+            const isExist = await usersCollection.findOne(query)
+            if (isExist) {
+                return res.send(isExist)
+            }
+            const result = await usersCollection.insertOne({
+                ...user,
+                timestamp: Date.now(),
+            })
+            res.send(result)
+        })
+
+
+        app.post('/tasks', async (req, res) => {
+            const task = req.body
+            const result = await tasksCollection.insertOne(task)
+            res.send(result)
+        })
+
+
+        app.get('/', async (req, res) => {
+            res.send('heelo')
+        })
         await client.connect();
-        // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
     }
 }
 run().catch(console.dir);
