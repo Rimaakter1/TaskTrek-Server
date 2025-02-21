@@ -62,9 +62,23 @@ async function run() {
             res.send(result)
         })
 
-        app.get("/tasks", async (req, res) => {
-            const tasks = await tasksCollection.find({}).toArray();
+        app.get("/tasks/:email", async (req, res) => {
+            const userEmail = req.params.email;
+            const tasks = await tasksCollection.find({ email: userEmail }).toArray();
             res.send(tasks);
+
+        });
+
+        app.put('/tasks/:id', async (req, res) => {
+            const { title, description, category } = req.body;
+            const taskId = req.params.id;
+            console.log(taskId)
+            const updatedTask = await tasksCollection.updateOne(
+                { _id: new ObjectId(taskId) },
+                { $set: { title, description, category } }
+            );
+            const taskAfterUpdate = await tasksCollection.findOne({ _id: new ObjectId(taskId) });
+            res.send(taskAfterUpdate);
 
         });
 
