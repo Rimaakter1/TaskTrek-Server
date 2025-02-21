@@ -20,7 +20,7 @@ app.use(cookieParser())
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://task62:Pj0rjghlaNZHybzV@cluster0.whq23.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 const client = new MongoClient(uri, {
@@ -62,6 +62,21 @@ async function run() {
             res.send(result)
         })
 
+        app.get("/tasks", async (req, res) => {
+            const tasks = await tasksCollection.find({}).toArray();
+            res.send(tasks);
+
+        });
+
+
+        app.put('/tasks/reorder', async (req, res) => {
+            const { taskId, newCategory, newIndex } = req.body;
+            const result = await tasksCollection.updateOne(
+                { _id: new ObjectId(taskId) },
+                { $set: { category: newCategory, order: newIndex } }
+            );
+            res.send(result);
+        });
 
         app.get('/', async (req, res) => {
             res.send('heelo')
