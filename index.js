@@ -40,10 +40,8 @@ async function run() {
 
         app.post('/users/:email', async (req, res) => {
             const email = req.params.email
-            console.log(email);
             const query = { email }
             const user = req.body
-            console.log(query, user)
             const isExist = await usersCollection.findOne(query)
             if (isExist) {
                 return res.send(isExist)
@@ -72,7 +70,6 @@ async function run() {
         app.put('/tasks/:id', async (req, res) => {
             const { title, description, category } = req.body;
             const taskId = req.params.id;
-            console.log(taskId)
             const updatedTask = await tasksCollection.updateOne(
                 { _id: new ObjectId(taskId) },
                 { $set: { title, description, category } }
@@ -83,14 +80,19 @@ async function run() {
         });
 
 
-        app.put('/tasks/reorder', async (req, res) => {
-            const { taskId, newCategory, newIndex } = req.body;
-            const result = await tasksCollection.updateOne(
-                { _id: new ObjectId(taskId) },
-                { $set: { category: newCategory, order: newIndex } }
-            );
-            res.send(result);
+
+        app.put('/task/reorder', async (req, res) => {
+                const { taskId, newCategory, newIndex } = req.body;
+                const result = await tasksCollection.updateOne(
+                    { _id: new ObjectId(taskId) },
+                    { $set: { category: newCategory, order: newIndex } }
+                );
+
+                res.send(result);
+           
         });
+
+
 
 
         app.delete('/tasks/:id', async (req, res) => {
@@ -103,9 +105,7 @@ async function run() {
         app.get('/', async (req, res) => {
             res.send('heelo')
         })
-        await client.connect();
         await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
     }
 }
