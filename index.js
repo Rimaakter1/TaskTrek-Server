@@ -6,19 +6,14 @@ require('dotenv').config()
 const cookieParser = require('cookie-parser')
 const corsOptions = {
     origin: ['http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
     optionalSuccessStatus: 200,
 }
 
-
-
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
-
-
-
-
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.whq23.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
