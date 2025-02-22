@@ -5,7 +5,7 @@ const port = process.env.PORT || 5000
 require('dotenv').config()
 const cookieParser = require('cookie-parser')
 const corsOptions = {
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://tasktrek-55a4e.web.app', 'https://monumental-snickerdoodle-8725a8.netlify.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
     optionalSuccessStatus: 200,
@@ -114,5 +114,4 @@ run().catch(console.dir);
 
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
 })
