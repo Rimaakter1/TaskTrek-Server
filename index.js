@@ -21,7 +21,7 @@ app.use(cookieParser())
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = `mongodb+srv://task62:Pj0rjghlaNZHybzV@cluster0.whq23.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.whq23.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -89,7 +89,6 @@ async function run() {
                 );
 
                 res.send(result);
-           
         });
 
 
